@@ -1,0 +1,5 @@
+\beamer@sectionintoc {1}{Présentation de la théorie.}{6}{0}{1}
+\beamer@sectionintoc {2}{Implémentation des opérations fondamentales.}{14}{0}{2}
+\beamer@sectionintoc {3}{Création d'opérations complexes.}{16}{0}{3}
+\beamer@sectionintoc {4}{Conclusion.}{20}{0}{4}
+\beamer@sectionintoc {5}{Annexe.}{23}{0}{5}

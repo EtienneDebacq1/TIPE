@@ -1,0 +1,16 @@
+\begin{lstlisting}[language=C]
+    libere_structurant(D);
+    libere_fonction(f);
+    libere_fonction(f_inf);
+    libere_fonction(f_sup);
+    libere_fonction(f_dilatation);
+    libere_fonction(f_erosion);
+    libere_fonction(f_ouverture);
+    libere_fonction(f_fermeture);
+    libere_fonction(f_rehaussement);
+    libere_fonction(f_gradient);
+    libere_fonction(f_chapeau);
+    libere_image(img);
+
+    return 0;
+}\end{lstlisting}

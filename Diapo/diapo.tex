@@ -1,0 +1,859 @@
+\documentclass[aspectratio=43,xcolor=dvipsnames]{beamer}
+\usetheme{SimpleDarkBlue}
+\usepackage{xcolor}
+\usepackage{subfig}
+\usepackage{hyperref}
+\usepackage{graphicx} 
+\usepackage{booktabs}
+\usepackage{tikz}
+
+\captionsetup[subfigure]{font=small, labelformat=empty}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+\usepackage{float}
+
+\setbeamertemplate{footline}[default]
+
+\setbeamertemplate{footline}{
+  \leavevmode
+  \hfill
+  \usebeamercolor[fg]{page number in head/foot}
+  \usebeamerfont{page number in head/foot}
+  \insertframenumber
+  \hspace{1em}
+  \vspace{1em}
+}
+
+\usepackage{listings}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{1,1,1}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+%----------------------------------------------------------------------------------------
+
+\title{Transformation visuelle d’une image avec la morphologie mathématique.}
+\subtitle{TIPE 2025 : Transition, transformation, conversion.}
+\author{Étienne Debacq, n°16370.}
+\institute{CPGE MPI.}
+\date{Novembre 2024 - Mai 2025.}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Introduction historique.}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Georges Matheron.]{\includegraphics[scale=0.6]{//home/etienne/Bureau/TIPE/Final/Images/Georges_Matheron.jpg}}
+        \quad
+        \subfloat[École des Mines de Paris.]{\includegraphics[scale=0.5]{//home/etienne/Bureau/TIPE/Final/Images/Mines_Paris.jpg}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Problématique.}
+    \LARGE
+    Dans quelle mesure la morphologie mathématique permet-elle d'obtenir des transformations efficaces pour les images grayscale ? \\
+\end{frame}
+
+\begin{frame}{Objectifs.}
+    \LARGE
+    $\bullet$ Une étude de la morphologie mathématique. \\
+    $\bullet$ Une implémentation des outils étudiés dans le langage C. \\
+    $\bullet$ Une recherche d'algorithmes optimisés.
+\end{frame}
+
+\begin{frame}{Sommaire.}
+    \small
+    \tableofcontents
+\end{frame}
+
+%-----------------------------------------------------------------------
+\section{Présentation de la théorie.}
+
+\begin{frame}{Présentation de la théorie.}
+    \begin{block}{Deux points de vue possibles.}
+        \begin{itemize}
+            \item Point de vue ensembliste dans $\mathcal P(\mathbb R^n)$.
+            \item Point de vue fonctionnelle dans $\mathcal F(\mathbb R^n, \mathbb R)$.
+        \end{itemize}
+    \end{block}
+    \begin{alertblock}{Restriction.}
+        \begin{itemize}
+            \item De $\mathbb R^n$ à $\mathbb N^n$.
+            \item Étude pour $n=2$.
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}
+    \begin{block}{Définition : élément structurant.}
+        Ensemble $\mathcal B$ dont la forme et la taille sont choisies.\\
+        On appelle origine de $\mathcal B$ un point de l'espace arbitraire.
+    \end{block}
+    \begin{block}{Rôle :}
+        Permet de modifier l'image à notre guise.
+    \end{block}
+    \begin{figure}[h]
+        \subfloat[Disque structurant de rayon 50 et d'origine le centre du disque.]{\includegraphics{///home/etienne/Bureau/TIPE/Final/Images/Disque_r_50.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{block}{Définition : dilatation fonctionnelle.}
+        On note $\mathcal D(f, \mathcal B)$ la fonction suivante :
+        $$ \mathcal D(f, \mathcal B) : x \mapsto \sup \{ f(y), y\in \tau(\mathcal B, x) \} $$
+        où $\tau(\mathcal B, x)$ est la translation de $\mathcal B$ dont l'origine est $x$.
+    \end{block}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Image d'origine.]{\includegraphics[scale=0.26]{//home/etienne/Bureau/TIPE/Final/Images/singe.png}}
+        \quad
+        \subfloat[Dilatation par un disque de rayon 3.]{\includegraphics[scale=0.26]{//home/etienne/Bureau/TIPE/Final/Images/singe_dilate_3.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{block}{Définition : érosion fonctionnelle.}
+        On note $\mathcal E(f, \mathcal B)$ la fonction suivante :
+        $$ \mathcal E(f, \mathcal B) : x \mapsto \inf \{ f(y), y\in \tau(\mathcal B, x) \} $$ 
+        où $\tau(\mathcal B, x)$ est la translation de $\mathcal B$ dont l'origine est $x$.
+    \end{block}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Image d'origine.]{\includegraphics[scale=0.26]{//home/etienne/Bureau/TIPE/Final/Images/singe.png}}
+        \quad
+        \subfloat[Érosion par un disque de rayon 3.]{\includegraphics[scale=0.26]{//home/etienne/Bureau/TIPE/Final/Images/singe_erode_3.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{block}{Définition : ouverture fonctionnelle.}
+        L'ouverture fonctionnelle de $f$ par $\mathcal B$ est :
+        $$ f_{\mathcal B} := \mathcal D(\mathcal E(f, \mathcal B), \mathcal S_{\mathcal B}) $$
+    \end{block}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Image d'origine.]{\includegraphics[scale=0.29]{//home/etienne/Bureau/TIPE/Final/Images/singe.png}}
+        \quad
+        \subfloat[Ouverture par un disque de rayon 3.]{\includegraphics[scale=0.29]{//home/etienne/Bureau/TIPE/Final/Images/singe_ouvert_3.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{block}{Définition : fermeture fonctionnelle.}
+        La fermeture fonctionnelle de $f$ par $\mathcal B$ est :
+        $$ f^{\mathcal B} := \mathcal E(\mathcal D(f, \mathcal B), \mathcal S_{\mathcal B}) $$
+    \end{block}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Image d'origine.]{\includegraphics[scale=0.29]{//home/etienne/Bureau/TIPE/Final/Images/singe.png}}
+        \quad
+        \subfloat[Fermeture par un disque de rayon 3.]{\includegraphics[scale=0.29]{//home/etienne/Bureau/TIPE/Final/Images/singe_ferme_3.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{block}{Restriction.}
+        $\mathcal B$ est un disque centré, de rayon variable et petit.
+    \end{block}
+    \begin{alertblock}{Conséquence :}
+        Dans le cas d'un disque centré : $\mathcal S_{\mathcal B} = \mathcal B$.
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{Choix du langage.}
+    \begin{block}{Justifications du choix du C.}
+        \begin{itemize}
+            \item Exécution plus rapide que d'autres langages.
+            \item Pas de fuite de mémoire et contrôle de celle-ci.
+            \item Au programme de MPI.
+        \end{itemize}
+    \end{block}
+    \begin{figure}[h]
+            \subfloat{\includegraphics[scale=0.05]{//home/etienne/Bureau/TIPE/Final/Images/C_logo.png}}
+    \end{figure}
+\end{frame}
+
+%-----------------------------------------------------------------------
+\section{Implémentation des opérations fondamentales.}
+
+\begin{frame}{Implémentation des opérations fondamentales.}
+    \begin{block}{Définition : types structurés.}
+        Trois types structurés : 
+        \begin{itemize}
+            \item Image : pour tracer les figures au format .pgm ;
+            \item Fonction : $\mathcal M_{L_0, L_1} ([\![0;255]\!])$ ;
+            \item Structurant : $\mathcal M_{2r}(\mathbb Z/2\mathbb Z$) munie d'une origine dans $\mathbb N^2$.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Complexité.}
+    \begin{block}{Remarque :}
+        $r \ll L_0$ et $r \ll L_1$
+    \end{block}
+    \begin{alertblock}{Conséquence :}
+        Négligeabilité des opérations sur les éléments structurants.
+    \end{alertblock}
+    \begin{block}{Théorème : complexité des opérations.}
+        Toutes les opérations sont en $\mathcal O(L_0 \times L_1)$ pour cette implémentation.
+    \end{block}
+\end{frame}
+
+%-----------------------------------------------------------------------
+\section{Création d'opérations complexes.}
+
+\begin{frame}{Création d'opérations complexes.}
+    \begin{block}{Définition : rehaussement de contraste morphologique.}
+        Pour une fonction $f$, $\underline{f}$ minorant $f$ et $\overline{f}$ majorant $f$, $\alpha \ge 0$ et $\beta \ge 0$ avec $\alpha + \beta < 1$. On a : 
+        \begin{align}
+            \mathcal C_f(x) = 
+            \begin{cases}
+                \underline{f}(x) & \text{si } \underline{f}(x) \le f(x) \le \underline{f}(x) + \alpha\Delta f(x)\\
+                f(x) & \text{si } \underline{f}(x) + \alpha\Delta f(x) \le f(x) \le \overline{f}(x) - \beta \Delta f(x) \\
+                \overline{f}(x) & \text{si } \overline{f}(x) - \beta \Delta f(x) \le f(x) \le \overline{f}(x)
+            \end{cases}
+        \end{align}
+        où $\Delta f = \overline{f} - \underline{f}$.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[h]
+        \centering
+        \subfloat[$\alpha = 0,33; \beta = 0,33; \mathcal E$ et $\mathcal D$.]{\includegraphics[scale=0.31]{//home/etienne/Bureau/TIPE/Final/Images/singe_rehausse_equi_ero_dil.png}}
+        \quad
+        \subfloat[$\alpha = 0,33; \beta = 0,33; f_{\mathcal B}$ et $f^{\mathcal B}$.]{\includegraphics[scale=0.31]{//home/etienne/Bureau/TIPE/Final/Images/singe_rehausse_equi_ouv_fer.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{block}{Définition : gradient morphologique.}
+        Le gradient morphologique de $f$ est défini par :
+        $$\mathcal Gr_f = \mathcal D(f, \mathcal B) - \mathcal E(f, \mathcal B)$$
+        où $\mathcal B$ est le disque unité.
+    \end{block}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Image d'origine.]{\includegraphics[scale=0.26]{//home/etienne/Bureau/TIPE/Final/Images/singe.png}}
+        \quad
+        \subfloat[Gradient morphologique.]{\includegraphics[scale=0.26]{//home/etienne/Bureau/TIPE/Final/Images/singe_gradient.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{block}{Définition : chapeau haut-de-forme.}
+        On définit le chapeau haut-de-forme de $f$ par $\mathcal B$ par :
+        $$ \mathcal{CHF}_f = f - f_{\mathcal B} $$
+    \end{block}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Image d'origine.]{\includegraphics[scale=0.26]{//home/etienne/Bureau/TIPE/Final/Images/singe.png}}
+        \quad
+        \subfloat[Chapeau haut-de-forme par un disque de rayon 3.]{\includegraphics[scale=0.26]{//home/etienne/Bureau/TIPE/Final/Images/singe_chapeau_hdf.png}}
+    \end{figure}
+\end{frame}
+
+%-----------------------------------------------------------------------
+\section{Conclusion.}
+
+\begin{frame}{Conclusion : adaptation aux couleurs.}
+    \begin{center}
+    \includegraphics[scale=0.2]{//home/etienne/Bureau/TIPE/Final/Images/rouge_femme.png}
+    \includegraphics[scale=0.2]{//home/etienne/Bureau/TIPE/Final/Images/vert_femme.png}
+    \includegraphics[scale=0.2]{//home/etienne/Bureau/TIPE/Final/Images/bleu_femme.png}
+    \includegraphics[scale=0.2]{//home/etienne/Bureau/TIPE/Final/Images/couleur_femme.png}\\        
+    \end{center}
+    \vspace{0.5cm}
+    Adaptation sur chaque partie des images en s'appuyant sur les images grayscale : \\
+    Couleurs $\rightsquigarrow$ trois composantes $\rightsquigarrow$ traitement grayscale sur ces composantes $\rightsquigarrow$ recomposition de l'image.
+\end{frame}
+
+\begin{frame}{Conclusion : quelques applications.}
+    \Large
+    $\hookrightarrow$ Reconnaissance de formes. \\ \vspace{0.2cm}
+    $\hookrightarrow$ Tamisage pour une étude des sols. \\ \vspace{0.2cm}
+    $\hookrightarrow$ Ligne de partage des eaux. 
+\end{frame}
+
+%-----------------------------------------------------------------------
+
+\begin{frame}
+    \Huge{\centerline{\textbf{FIN.}}}
+    \Huge{\centerline{\textbf{Merci de votre attention.}}}
+\end{frame}
+
+%-----------------------------------------------------------------------
+\section{Annexe.}
+
+\begin{frame}{Annexe : illustrations.}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Érosion par un carré de côté 3.]{\includegraphics[scale=0.4]{//home/etienne/Bureau/TIPE/Final/Images/singe_erode_3_carre.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Dilatation par un disque de rayon 3.]{\includegraphics[scale=0.4]{//home/etienne/Bureau/TIPE/Final/Images/singe_dilate_3.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Érosion par un disque de rayon 3.]{\includegraphics[scale=0.4]{//home/etienne/Bureau/TIPE/Final/Images/singe_erode_3.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Ouverture par un disque de rayon 3.]{\includegraphics[scale=0.4]{//home/etienne/Bureau/TIPE/Final/Images/singe_ouvert_3.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Fermeture par un disque de rayon 3.]{\includegraphics[scale=0.4]{//home/etienne/Bureau/TIPE/Final/Images/singe_ferme_3.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[h]
+        \centering
+        \subfloat[$\alpha = 0,4; \beta = 0,5; f_{\mathcal B}$ et $f^{\mathcal B}$.]{\includegraphics[scale=0.4]{//home/etienne/Bureau/TIPE/Final/Images/singe_rehausse_equi_ouv_fer.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[h]
+        \centering
+        \subfloat[$\alpha = 0,4; \beta = 0,5; \mathcal E$ et $\mathcal D$.]{\includegraphics[scale=0.4]{//home/etienne/Bureau/TIPE/Final/Images/singe_rehausse_equi_ero_dil.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Gradient morphologique.]{\includegraphics[scale=0.4]{//home/etienne/Bureau/TIPE/Final/Images/singe_gradient.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Chapeau haut-de-forme par un disque de rayon 3.]{\includegraphics[scale=0.4]{//home/etienne/Bureau/TIPE/Final/Images/singe_chapeau_hdf.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Annexe : algorithmes.}
+    \begin{algorithm}[H]
+        \caption{Dilatation fonctionelle.}\label{alg:sup}
+        \begin{algorithmic}[1]
+            \Require $f \in \mathcal F(\mathbb N^2, [\![0;255]\!])$, $\mathcal B \in \mathcal P(E)$ un élément structurant.
+            \Ensure : $\mathcal D(f, \mathcal B)$.
+            \State $g \gets 0_{\mathcal F(\mathbb N^2, [\![0;255]\!])}$
+            \State $x \gets 0_{\mathbb N^2}$
+            \For{$i\gets 0$ jusqu'à $L_0-1$}
+                \For{$j\gets 0$ jusqu'à $L_1-1$}
+                    \State $x \gets (i,j)$
+                    \State $g(x) \gets \underset{y\in \tau(\mathcal B, x)}{\sup} \{f(y)\}$
+                \EndFor
+            \EndFor\\
+            \Return $g$
+        \end{algorithmic}
+    \end{algorithm}
+\end{frame}
+
+\begin{frame}[fragile]{Annexe : code.}
+    \begin{lstlisting}[language=C]
+typedef struct fonction{     
+    int *L;                                               
+    int **valeurs;                           
+} fonction;
+
+typedef struct structurant{
+    bool **forme;                           
+    int *origine;
+    int rayon;                           
+} structurant;
+
+typedef struct image{
+    int hauteur;
+    int largeur;
+    int **valeurs;
+} image;\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+void ecrire_image(char *nom_fichier, image *img){
+    FILE *fichier = fopen(nom_fichier, "w");
+    if(fichier == NULL){
+        printf("Erreur ! Fichier non ouvert.");
+        return;
+    }
+    fprintf(fichier, "P2\n%d %d\n", img->largeur, img->hauteur);
+    fprintf(fichier, "%d\n", 255);
+    for(int i = 0; i < img->hauteur; i++){
+        for(int j = 0; j < img->largeur; j++){
+            fprintf(fichier, "%d ", img->valeurs[i][j]);
+        }
+        fprintf(fichier, "\n");
+    }
+    fclose(fichier);
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+image *recupere_image(char *nom_fichier){
+    FILE *fichier = fopen(nom_fichier, "r");
+    if(fichier == NULL){
+        printf("Erreur ! Fichier non ouvert.\n");
+        return NULL;
+    }
+    char *mode = malloc(3 * sizeof(char));
+    if (mode == NULL) {
+        printf("Erreur d'allocation pour le mode.\n");
+        fclose(fichier);
+        return NULL;
+    }
+
+    int hauteur, largeur, max;
+    fscanf(fichier, "%s %d %d %d", mode, &hauteur, &largeur, &max);
+    printf("%s -> Mode: %s, Largeur: %d, Hauteur: %d, Max: %d\n", nom_fichier, mode, largeur, hauteur, max);\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+    image *img = malloc(sizeof(image));
+    if (img == NULL) {
+        printf("Erreur d'allocation pour l'image.\n");
+        free(mode);
+        fclose(fichier);
+        return NULL;
+    }
+
+    img->hauteur = hauteur;
+    img->largeur = largeur;
+    img->valeurs = malloc(hauteur * sizeof(int*));
+    if (img->valeurs == NULL) {
+        printf("Erreur d'allocation pour les lignes.\n");
+        free(mode);
+        free(img);
+        fclose(fichier);
+        return NULL;
+    }\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+    for(int i = 0; i < hauteur; i++){
+        img->valeurs[i] = malloc(largeur * sizeof(int));
+        if (img->valeurs[i] == NULL) {
+            printf("Erreur d'allocation pour la colonne %d.\n", i);
+            for (int k = 0; k < i; k++) free(img->valeurs[k]);
+            free(img->valeurs);
+            free(img);
+            free(mode);
+            fclose(fichier);
+            return NULL;
+        }
+    }
+    
+    for(int i = 0; i < img->hauteur; i++){
+        for(int j = 0; j < img->largeur; j++){
+            fscanf(fichier, "%d", &(img->valeurs[i][j]));
+        }
+    }\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+    free(mode);
+    fclose(fichier);
+    return img;
+}
+
+image *image_depuis_fonction(fonction *f){
+    image *img = malloc(sizeof(image));
+    img->hauteur = f->L[0];
+    img->largeur = f->L[1];
+    img->valeurs = malloc(img->hauteur * sizeof(int *));
+    for(int i = 0; i < img->hauteur; i++){
+        img->valeurs[i] = malloc(img->largeur * sizeof(int));
+        for(int j = 0; j < img->largeur; j++){
+            img->valeurs[i][j] = f->valeurs[i][j];
+        }
+    }
+    return img;
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+fonction *fonction_nulle(int *L){
+    fonction *f_0 = malloc(sizeof(fonction));
+    f_0->L = L;
+    f_0->valeurs = malloc(L[0]*sizeof(int*));
+    for(int i = 0; i < L[0]; i++){
+        f_0->valeurs[i] = malloc(L[1]*sizeof(int));
+        for(int j = 0; j < L[1]; j++){
+            f_0->valeurs[i][j] = 0;
+        }
+    }
+    return f_0;
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}
+structurant *structurant_vide(int *origine, int rayon){
+    structurant *ret = malloc(sizeof(structurant));
+    ret->rayon = rayon;
+    ret->forme = malloc(2*rayon*sizeof(bool*));
+    for(int i = 0; i < 2*rayon; i++){
+        ret->forme[i] = calloc(2*rayon, sizeof(bool));
+    }
+    ret->origine = origine;
+    return ret;
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+void dessine_fonction(fonction *f, fonction *g){
+    for(int i = 0; i < f->L[0]; i++){
+        for(int j = 0; j < f->L[1]; j++){
+            if(g->valeurs[i][j] > 0){
+                f->valeurs[i][j] = g->valeurs[i][j];
+            }
+        }
+    }
+    return;
+}
+
+void libere_fonction(fonction *f){
+    for(int i = 0; i < f->L[0]; i++){
+        free(f->valeurs[i]);
+    }
+    free(f->valeurs);
+    free(f);
+    return;
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+void libere_structurant(structurant *B){
+    for(int i = 0; i < 2*B->rayon; i++){
+        free(B->forme[i]);
+    }
+    free(B->forme);
+    free(B);
+    return;
+}
+
+void libere_image(image *img){
+    for(int i = 0; i < img->hauteur; i++){
+        free(img->valeurs[i]);
+    }
+    free(img->valeurs);
+    free(img);
+    return;
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+fonction *fonction_of_image(image *img){
+    int *L = malloc(2*sizeof(int));
+    L[0] = img->hauteur; L[1] = img->largeur;
+    fonction *C = fonction_nulle(L);
+    for(int i = 0; i < L[0]; i++){
+        for(int j = 0; j < L[1]; j++){
+            C->valeurs[i][j] = img->valeurs[i][j];
+        }
+    }
+    return C;
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+fonction *fonction_of_structurant(structurant *B){
+    int *L = malloc(2*sizeof(int));
+    L[0] = 2*B->rayon;
+    L[1] = 2*B->rayon;
+    fonction *f = fonction_nulle(L);
+    f->L = L;
+    for(int i = 0; i < 2*B->rayon; i++){
+        for(int j = 0; j < 2*B->rayon; j++){
+            f->valeurs[i][j] = 255*B->forme[i][j];
+        }
+    }
+    return f;
+}
+
+bool est_dedans(int i, int j, int *L){
+    return 0 <= i && i < L[0] && 0 <= j && j < L[1];
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+int sup(fonction *f, structurant *B){
+    int s = 0;
+    int o[2] = {B->origine[0], B->origine[1]};
+    int r = B->rayon;
+    for(int i = o[0] - r; i < o[0] + r; i++){
+        for(int j = o[1] - r; j < o[1] + r; j++){
+            if(est_dedans(i, j, f->L) && B->forme[i + r - o[0]][j + r - o[1]] && s <= f->valeurs[i][j]){
+                s = f->valeurs[i][j];
+            }
+        }
+    }
+    return s;
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+int inf(fonction *f, structurant *B){
+    int s = 255;
+    int o[2] = {B->origine[0], B->origine[1]};
+    int r = B->rayon;
+    for(int i = o[0] - r; i < o[0] + r; i++){
+        for(int j = o[1] - r; j < o[1] + r; j++){
+            if(est_dedans(i, j, f->L) && B->forme[i + r - o[0]][j + r - o[1]] && s >= f->valeurs[i][j]){
+                s = f->valeurs[i][j];
+            }
+        }
+    }
+    return s;
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+void translate_B_vers_x(structurant *B, int *x){
+    B->origine = x;
+    return;
+}
+
+structurant *Disque(int *L, int r, int *o){
+    structurant *B = structurant_vide(o, r);
+    for(int i = o[0] - r; i < o[0] + r; i++){
+        for(int j = o[1] - r; j< o[1] + r; j++){
+            int dist_2 = (i-o[0]) * (i-o[0]) + (j-o[1]) * (j-o[1]);
+            if(est_dedans(i, j, L)){
+                if(dist_2 <= r*r){
+                    B->forme[i + r - o[0]][j + r - o[1]] = true;
+                }
+            }
+        }
+    }
+    return B;
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+fonction *dilatation_fonctionnelle(fonction *f, structurant *B){
+    fonction *f_d = fonction_nulle(f->L);
+    int *x = malloc(2*sizeof(int));
+    for(int i = 0; i < f->L[0]; i++){
+        x[0] = i;
+        for(int j = 0; j < f->L[1]; j++){
+            x[1] = j;
+            translate_B_vers_x(B, x);
+            f_d->valeurs[i][j] = sup(f, B);
+        }
+    }
+    free(x);
+    return f_d;
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+fonction *erosion_fonctionnelle(fonction *f, structurant *B){
+    fonction *f_e = fonction_nulle(f->L);
+    int *x = malloc(2*sizeof(int));
+    for(int i = 0; i < f->L[0]; i++){
+        x[0] = i;
+        for(int j = 0; j < f->L[1]; j++){
+            x[1] = j;
+            translate_B_vers_x(B, x);
+            f_e->valeurs[i][j] = inf(f, B);
+        }
+    }
+    free(x);
+    return f_e;
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+fonction *ouverture_numerique(fonction *f, structurant *B){
+    return dilatation_fonctionnelle(erosion_fonctionnelle(f, B), B);
+}
+
+fonction *fermeture_numerique(fonction *f, structurant *B){
+    return erosion_fonctionnelle(dilatation_fonctionnelle(f, B), B);
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+fonction *rehaussement_contraste(fonction *f, double alpha, double beta, fonction *f_inf, fonction *f_sup){
+    fonction *g = fonction_nulle(f->L);
+    for(int i = 0; i < f->L[0]; i++){
+        for(int j = 0; j < f->L[1]; j++){
+            int Delta_f_i_j = f_sup->valeurs[i][j] - f_inf->valeurs[i][j];
+            if(f_inf->valeurs[i][j] <= f->valeurs[i][j] && f->valeurs[i][j] <= f_inf->valeurs[i][j] + alpha*Delta_f_i_j){
+                g->valeurs[i][j] = f_inf->valeurs[i][j];
+            }else if(f_inf->valeurs[i][j] + alpha*Delta_f_i_j <= f->valeurs[i][j] && f->valeurs[i][j] <= f_sup->valeurs[i][j] - beta*Delta_f_i_j){
+                g->valeurs[i][j] = f->valeurs[i][j];
+            }else{
+                g->valeurs[i][j] = f_sup->valeurs[i][j];
+            }
+        }
+    }
+    return g;
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+fonction *gradient_morpho(fonction *f, int *origine){
+    fonction *g = fonction_nulle(f->L);
+    structurant *B = Disque(f->L, 1, origine);
+    fonction *D = dilatation_fonctionnelle(f, B);
+    fonction *E = erosion_fonctionnelle(f, B);
+    for(int i = 0; i < f->L[0]; i++){
+        for(int j = 0; j < f->L[1]; j++){
+            g->valeurs[i][j] = D->valeurs[i][j] - E->valeurs[i][j];
+        }
+    }
+    return g;
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+fonction *chapeau_haut_de_forme(fonction *f, structurant *B){
+    fonction *g = fonction_nulle(f->L);
+    fonction *ouv = ouverture_numerique(f, B);
+    for(int i = 0; i < f->L[0]; i++){
+        for(int j = 0; j < f->L[1]; j++){
+            if(f->valeurs[i][j] - ouv->valeurs[i][j] <= 0){
+                g->valeurs[i][j] = 0;
+            }
+            else{
+                g->valeurs[i][j] = f->valeurs[i][j] - ouv->valeurs[i][j];
+            }
+        }
+    }
+    return g;
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+int main(void){
+
+    double alpha = 0.4;
+    double beta = 0.5;
+
+    int r_dilatation = 2;
+    int r_erosion = 2;
+    int r_ouverture = 2;
+    int r_fermeture = 2;
+    int r_chapeau = 2;
+
+    image *img = recupere_image("Femme_P2.pgm");
+    int L[2] = {img->hauteur, img->largeur};
+    int origine[2] = {img->hauteur/2, img->largeur/2};
+    fonction *f = fonction_of_image(img);
+    structurant *D = Disque(L, 2, origine);
+
+    fonction *f_inf = ouverture_numerique(f, D);
+    fonction *f_sup = fermeture_numerique(f, D);\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+    fonction *f_dilatation = dilatation_fonctionnelle(f, D);
+    fonction *f_erosion = erosion_fonctionnelle(f, D);
+    fonction *f_ouverture = ouverture_numerique(f, D);
+    fonction *f_fermeture = fermeture_numerique(f, D);
+    fonction *f_rehaussement = rehaussement_contraste(f, alpha, beta, f_inf, f_sup);
+    fonction *f_gradient = gradient_morpho(f, origine);
+    fonction *f_chapeau = chapeau_haut_de_forme(f, D);\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+    ecrire_image("Femme_dilatee_r=2.pgm", image_depuis_fonction(f_dilatation));
+    ecrire_image("Femme_erodee_r=2.pgm", image_depuis_fonction(f_erosion));
+    ecrire_image("Femme_ouverte_r=2.pgm", image_depuis_fonction(f_ouverture));
+    ecrire_image("Femme_fermee_r=2.pgm", image_depuis_fonction(f_fermeture));
+    ecrire_image("Femme_rehaussee_ouv_fer_alpha=04_beta=05.pgm", image_depuis_fonction(f_rehaussement));
+    ecrire_image("Femme_gradient.pgm", image_depuis_fonction(f_gradient));
+    ecrire_image("Femme_chapeau_hdf_r=2.pgm", image_depuis_fonction(f_chapeau));\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{lstlisting}[language=C]
+    libere_structurant(D);
+    libere_fonction(f);
+    libere_fonction(f_inf);
+    libere_fonction(f_sup);
+    libere_fonction(f_dilatation);
+    libere_fonction(f_erosion);
+    libere_fonction(f_ouverture);
+    libere_fonction(f_fermeture);
+    libere_fonction(f_rehaussement);
+    libere_fonction(f_gradient);
+    libere_fonction(f_chapeau);
+    libere_image(img);
+
+    return 0;
+}\end{lstlisting}
+\end{frame}
+
+\end{document}
