@@ -1,0 +1,148 @@
+\documentclass[aspectratio=43,xcolor=dvipsnames]{beamer}
+\usetheme{SimpleDarkBlue}
+\usepackage{xcolor}
+\usepackage{subfig}
+\usepackage{hyperref}
+\usepackage{graphicx} 
+\usepackage{booktabs}
+\usepackage{tikz}
+
+\captionsetup[subfigure]{font=small, labelformat=empty}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+\usepackage{float}
+
+\setbeamertemplate{footline}[default]
+
+\setbeamertemplate{footline}{
+  \leavevmode
+  \hfill
+  \usebeamercolor[fg]{page number in head/foot}
+  \usebeamerfont{page number in head/foot}
+  \insertframenumber
+  \hspace{1em}
+  \vspace{1em}
+}
+
+\usepackage{listings}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{1,1,1}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\begin{document}
+
+\begin{frame}{Page 2.}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Georges Matheron.]{\includegraphics[scale=0.6]{//home/etienne/Bureau/TIPE/Final/Images/Georges_Matheron.jpg}}
+        \quad
+        \subfloat[École des Mines de Paris.]{\includegraphics[scale=0.5]{//home/etienne/Bureau/TIPE/Final/Images/Mines_Paris.jpg}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Page 8.}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Image d'origine.]{\includegraphics[scale=0.32]{//home/etienne/Bureau/TIPE/Final/Images/singe.png}}
+        \quad
+        \subfloat[Dilatation par un disque de rayon 3.]{\includegraphics[scale=0.32]{//home/etienne/Bureau/TIPE/Final/Images/singe_dilate_3.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Page 9.}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Image d'origine.]{\includegraphics[scale=0.32]{//home/etienne/Bureau/TIPE/Final/Images/singe.png}}
+        \quad
+        \subfloat[Érosion par un disque de rayon 3.]{\includegraphics[scale=0.32]{//home/etienne/Bureau/TIPE/Final/Images/singe_erode_3.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Page 10.}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Image d'origine.]{\includegraphics[scale=0.32]{//home/etienne/Bureau/TIPE/Final/Images/singe.png}}
+        \quad
+        \subfloat[Ouverture par un disque de rayon 3.]{\includegraphics[scale=0.32]{//home/etienne/Bureau/TIPE/Final/Images/singe_ouvert_3.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Page 11.}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Image d'origine.]{\includegraphics[scale=0.32]{//home/etienne/Bureau/TIPE/Final/Images/singe.png}}
+        \quad
+        \subfloat[Fermeture par un disque de rayon 3.]{\includegraphics[scale=0.32]{//home/etienne/Bureau/TIPE/Final/Images/singe_ferme_3.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Page 17.}
+    \begin{figure}[h]
+        \centering
+        \subfloat[$\alpha = 0,33; \beta = 0,33; \mathcal E$ et $\mathcal D$.]{\includegraphics[scale=0.32]{//home/etienne/Bureau/TIPE/Final/Images/singe_rehausse_equi_ero_dil.png}}
+        \quad
+        \subfloat[$\alpha = 0,33; \beta = 0,33; f_{\mathcal B}$ et $f^{\mathcal B}$.]{\includegraphics[scale=0.32]{//home/etienne/Bureau/TIPE/Final/Images/singe_rehausse_equi_ouv_fer.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Page 18.}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Image d'origine.]{\includegraphics[scale=0.32]{//home/etienne/Bureau/TIPE/Final/Images/singe.png}}
+        \quad
+        \subfloat[Gradient morphologique.]{\includegraphics[scale=0.32]{//home/etienne/Bureau/TIPE/Final/Images/singe_gradient.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Page 19.}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Image d'origine.]{\includegraphics[scale=0.32]{//home/etienne/Bureau/TIPE/Final/Images/singe.png}}
+        \quad
+        \subfloat[Chapeau haut-de-forme par un disque de rayon 3.]{\includegraphics[scale=0.32]{//home/etienne/Bureau/TIPE/Final/Images/singe_chapeau_hdf.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Page 20.}
+    \begin{center}
+    \includegraphics[scale=0.25]{//home/etienne/Bureau/TIPE/Final/Images/rouge_femme.png}
+    \includegraphics[scale=0.25]{//home/etienne/Bureau/TIPE/Final/Images/vert_femme.png}
+    \includegraphics[scale=0.25]{//home/etienne/Bureau/TIPE/Final/Images/bleu_femme.png}
+    \includegraphics[scale=0.25]{//home/etienne/Bureau/TIPE/Final/Images/couleur_femme.png}\\        
+    \end{center}
+    Décomposition des images en son spectre de couleurs.
+\end{frame}
+
+\begin{frame}{Page 23.}
+    \begin{figure}[h]
+        \centering
+        \subfloat[Érosion par un carré de côté 3.]{\includegraphics[scale=0.4]{//home/etienne/Bureau/TIPE/Final/Images/singe_erode_3_carre.png}}
+    \end{figure}
+\end{frame}
+
+\end{document}

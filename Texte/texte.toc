@@ -1,0 +1,10 @@
+\contentsline {section}{\numberline {1}Présentation de la théorie.}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Introduction des quatre opérations fondamentales}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Choix du langage}{4}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Implémentation des opérations fondamentales.}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Définition des types}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Complexité}{4}{subsection.2.2}%
+\contentsline {section}{\numberline {3}Création d'opérations complexes.}{5}{section.3}%
+\contentsline {section}{\numberline {4}Conclusion.}{6}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Adaptation aux couleurs.}{6}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Quelques applications.}{6}{subsection.4.2}%
